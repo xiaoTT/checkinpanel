@@ -1488,6 +1488,9 @@ def run(args: argparse.Namespace, check_items: dict) -> str or None:
         args.email = check_item.get("email")
         args.password = check_item.get("password")
         args.data_dir = "User_Data/{}".format(args.email)
+        args.cookies = args.data_dir + "/cookies.json"
+        if not os.path.exists(args.cookies):
+            args.cookies = None
         if not os.path.exists("User_Data"):
             log(
                 f"未发现 User_Data 文件夹，判断为初次使用。若遇到人机验证，请在能手动登录浏览器页面的环境（如 Win10）使用 get_cookies.exe/py 获取 cookies.json 并放入 {args.data_dir} 文件夹，然后再尝试",
@@ -1508,8 +1511,6 @@ def start() -> None:
     if args.email and args.password:
         main()
         return
-    cwd = os.getcwd()
-    sys.path.append(cwd)
     ENV = get_env_str()
     if ENV == "v2p":
         os.chdir("/usr/local/app/script/Lists")
