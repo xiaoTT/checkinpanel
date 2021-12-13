@@ -17,14 +17,26 @@ class HaxClock:
     def __init__(self, check_items):
         self.check_items = check_items
 
-    def check_vps_info(self, cookie):
-        url = "https://hax.co.id/vps-info"
+    def login(self, cookie):
+        url = "https://hax.co.id/dashboard"
         headers = {
             "cookie": cookie,
-            "referer": "https://hax.co.id/vps-info/",
+            "referer": "https://hax.co.id/login",
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36 Edg/96.0.1054.43",
         }
-        datas = requests.get(url=url, headers=headers).text
+        session = requests.session()
+        resp = session.get(url=url, headers=headers)
+        if resp.status_code == 200:
+            print("hax.co.id Login successful!")
+        else:
+            print("hax.co.id Login failed!")
+            exit(1)
+        return session
+
+    def check_vps_info(self, cookie):
+        session = self.login(cookie)
+        url = "https://hax.co.id/vps-info"
+        datas = session.get(url=url).text
         print(datas)
         return datas
 
